@@ -59,7 +59,7 @@ class RootController(BaseController):
 
         user = query.first()
         log_message("'%s' logged out." % user.name)
-        model.DBSession.remove(user)
+        model.DBSession.delete(user)
         redirect('http://ritfloss.rtfd.org/')
 
 
