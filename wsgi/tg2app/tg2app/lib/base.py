@@ -2,10 +2,14 @@
 
 """The base Controller API."""
 
+from tg import config
 from tg import TGController, tmpl_context
 from tg.render import render
 from tg import request
 from tg.i18n import ugettext as _, ungettext
+
+from paste.deploy.converters import asbool
+
 import tg2app.model as model
 
 __all__ = ['BaseController']
@@ -26,6 +30,5 @@ class BaseController(TGController):
         # the request is routed to. This routing information is
         # available in environ['pylons.routes_dict']
 
-        request.identity = request.environ.get('repoze.who.identity')
-        tmpl_context.identity = request.identity
+        tmpl_context.in_production = asbool(config.get('in_production'))
         return TGController.__call__(self, environ, start_response)

@@ -4,6 +4,12 @@
 <head>
     ${self.meta()}
     <title>${self.title()}</title>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+% if tmpl_context.in_production:
+	<script type="text/javascript" src="${tg.url('/js/auth-fb.js')}"></script>
+% else:
+	<script type="text/javascript" src="${tg.url('/js/auth-faked.js')}"></script>
+% endif
     <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/style.css')}" />
     <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/admin.css')}" />
 </head>
@@ -104,12 +110,6 @@
         <li><a href="http://groups.google.com/group/turbogears">Contact</a></li>
     % if tg.auth_stack_enabled:
       <span>
-          % if not request.identity:
-            <li id="login" class="loginlogout"><a href="${tg.url('/login')}">Login</a></li>
-          % else:
-            <li id="login" class="loginlogout"><a href="${tg.url('/logout_handler')}">Logout</a></li>
-            <li id="admin" class="loginlogout"><a href="${tg.url('/admin')}">Admin</a></li>
-          % endif
       </span>
     % endif
   </ul>

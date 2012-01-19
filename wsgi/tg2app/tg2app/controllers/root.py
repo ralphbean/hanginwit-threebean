@@ -14,8 +14,14 @@ from tg2app.controllers.secure import SecureController
 
 from tg2app.controllers.error import ErrorController
 
+from sqlalchemy import desc
+from datetime import datetime, timedelta
+import random
+
 __all__ = ['RootController']
 
+def log_message(msg):
+    model.DBSession.add(model.Message(msg=msg))
 
 class RootController(BaseController):
     """
@@ -40,7 +46,55 @@ class RootController(BaseController):
     @expose('tg2app.templates.index')
     def index(self):
         """Handle the front-page."""
-        return dict(page='index')
+        return dict()
+
+    @expose()
+    def do_login(self, name, access_token):
+
+        query = model.Login.query.filter_by(name=name)
+
+        if query.count() == 0:
+            user = model.Login(name=name)
+            model.DBSession.add(user)
+        elif query.count() > 1:
+            # wtf...  when would this happen?
+            user = query.first()
+        else:
+            user = query.one()
+
+        user.access_token = access_token
+        user.last_seen = datetime.now()
+
+        log_message("%s logged in" % user.name)
+
+        redirect(url('/waiting/{name}#access_token={token}'.format(
+            name=user.name, token=user.access_token)))
+
+    @expose('json')
+    @expose('tg2app.templates.waiting', content_type='text/html')
+    def waiting(self, name):
+        users = model.Login.query.all()
+        def prune_idle(user):
+            if datetime.now() - user.last_seen > timedelta(minutes=10):
+                log_message("%s went idle.  Logging out." % user.name)
+                model.DBSession.delete(user)
+                return False
+            return True
+
+        users = filter(prune_idle, users)
+
+        if name not in [user.name for user in users]:
+            log_message("'%s' tried unauthorized access." % name)
+            redirect('/')
+
+        messages = model.Message.query\
+                .order_by(desc(model.Message.created_on))\
+                .limit(7).all()
+
+        return {
+            'users':[user.__json__() for user in users],
+            'messages':[msg.__json__() for msg in messages],
+        }
 
     @expose('tg2app.templates.about')
     def about(self):
@@ -91,12 +145,6 @@ class RootController(BaseController):
         authentication or redirect her back to the login page if login failed.
 
         """
-        if not request.identity:
-            login_counter = request.environ['repoze.who.logins'] + 1
-            redirect('/login',
-                params=dict(came_from=came_from, __logins=login_counter))
-        userid = request.identity['repoze.who.userid']
-        flash(_('Welcome back, %s!') % userid)
         redirect(came_from)
 
     @expose()
