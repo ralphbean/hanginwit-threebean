@@ -56,6 +56,8 @@ def init_model(engine):
     #    autoload=True, autoload_with=engine)
 
     #mapper(Reflected, t_reflected)
+    from tg2app.websetup.schema import setup_schema
+    setup_schema(None, None, None)
 
 
 # Import your model modules here.
