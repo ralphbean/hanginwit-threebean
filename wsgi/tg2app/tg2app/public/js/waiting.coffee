@@ -23,4 +23,13 @@ poll = () ->
             setTimeout(poll, globals.polling_interval)
     })
 
+$(document).bind('before-unload', () ->
+    toks = window.location.href.split('/')
+    last = toks[4]
+    name = last.split('#')[0]
+    $.ajax({
+        url: '/do_logout/' + name
+    })
+)
+
 $(document).ready(setTimeout(poll, globals.polling_interval))

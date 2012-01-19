@@ -49,6 +49,21 @@ class RootController(BaseController):
         return dict()
 
     @expose()
+    def do_logout(self, name):
+        query = model.Login.query.filter_by(name=name)
+
+        if query.count() == 0:
+            # wtf...  when would this happen?
+            log_message("'%s' (who DNE) tried to logout." % name)
+            redirect('http://ritfloss.rtfd.org/')
+
+        user = query.first()
+        log_message("'%s' logged out." % user.name)
+        model.DBSession.remove(user)
+        redirect('http://ritfloss.rtfd.org/')
+
+
+    @expose()
     def do_login(self, name, access_token):
 
         query = model.Login.query.filter_by(name=name)
