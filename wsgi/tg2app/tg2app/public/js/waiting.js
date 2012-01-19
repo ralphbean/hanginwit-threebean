@@ -30,6 +30,8 @@
     });
   };
 
+  $(document).ready(setTimeout(poll, globals.polling_interval));
+
   $(document).bind('before-unload', function() {
     var last, name, toks;
     toks = window.location.href.split('/');
@@ -39,7 +41,5 @@
       url: '/do_logout/' + name
     });
   });
-
-  $(document).ready(setTimeout(poll, globals.polling_interval));
 
 }).call(this);

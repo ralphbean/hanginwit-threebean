@@ -23,6 +23,9 @@ poll = () ->
             setTimeout(poll, globals.polling_interval)
     })
 
+$(document).ready(setTimeout(poll, globals.polling_interval))
+
+# This 'before-unload' bind doesn't actually work; it never fires!  Oh well!
 $(document).bind('before-unload', () ->
     toks = window.location.href.split('/')
     last = toks[4]
@@ -31,5 +34,3 @@ $(document).bind('before-unload', () ->
         url: '/do_logout/' + name
     })
 )
-
-$(document).ready(setTimeout(poll, globals.polling_interval))
