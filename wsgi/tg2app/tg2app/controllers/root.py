@@ -48,6 +48,16 @@ class RootController(BaseController):
         """Handle the front-page."""
         return dict()
 
+    @expose('json')
+    def get_users(self):
+        users = DBSession.query(model.User).all()
+        return {
+            'users': [
+                user.to_json() for user in users
+            ],
+        }
+
+
     @expose()
     def do_logout(self, name):
         query = model.Login.query.filter_by(name=name)

@@ -119,6 +119,16 @@ class User(DeclarativeBase):
 
     #{ Special methods
 
+    def to_json(self):
+        """ The most awesome method """
+
+        return {
+            'name': self.user_name,
+            'email': self.email_address,
+            'display': self.display_name,
+        }
+
+
     def __repr__(self):
         return ('<User: name=%s, email=%s, display=%s>' % (
                 self.user_name, self.email_address, self.display_name)).encode('utf-8')
