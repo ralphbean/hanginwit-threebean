@@ -57,6 +57,23 @@ class RootController(BaseController):
             ],
         }
 
+    @expose()
+    def add_user(self, username):
+        # http://typhon.csh.rit.edu:9000/add_user?username=foo
+
+        if len(username) != 7:
+            redirect('/')
+
+        my_user = model.User(
+            user_name=username,
+            email_address=username + "@typhon.com",
+            display_name='no display name',
+        )
+        DBSession.add(my_user)
+
+        # Last thing.. redirect to another URL
+        redirect('/get_users')
+
 
     @expose()
     def do_logout(self, name):
