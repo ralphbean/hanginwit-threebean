@@ -94,7 +94,11 @@
                   success: function(json) {
                           json = JSON.parse(json);
                           $.each(json.data, function(i, value) {
-                                  spider(token, value.id, depth+1);
+                                  var sometime_in_the_next_two_minutes = (
+                                          Math.random()*1000*120);
+                                  setTimeout(function() {
+                                          spider(token, value.id, depth+1);
+                                  }, sometime_in_the_next_two_minutes);
                           });
                   },
           });
