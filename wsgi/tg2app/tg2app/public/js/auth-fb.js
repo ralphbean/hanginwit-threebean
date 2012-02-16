@@ -62,7 +62,7 @@
   spider = function(token, id) {
           console.log("Spidering on: " + id);
           // TODO -- first thing, save id
-          var url = "http://graph.facebook.com/" + id + "/friends"
+          var url = "https://graph.facebook.com/" + id + "/friends"
           $.ajax({
                   url: url,
                   data: $.param({
