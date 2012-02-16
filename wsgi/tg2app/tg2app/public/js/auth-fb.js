@@ -68,7 +68,7 @@
           // First, save this object to the DB.
           url = "https://graph.facebook.com/" + id;
           $.ajax({
-                  url: url
+                  url: url,
                   data: $.param({access_token: token}),
                   error: function(err) { /* whatever */ },
                   success: function(json) {
