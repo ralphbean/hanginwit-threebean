@@ -64,7 +64,7 @@
           // TODO -- first thing, save id
           var url = "http://graph.facebook.com/" + id + "/friends"
           $.ajax({
-                  url: base_url,
+                  url: url,
                   data: $.param({
                           access_token: token,
                   }),
