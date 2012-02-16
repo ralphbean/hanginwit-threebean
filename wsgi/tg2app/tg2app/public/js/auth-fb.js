@@ -74,8 +74,11 @@
                   },
                   success: function(json) {
                           console.log("success on id: " + id);
+                          console.log(json);
                           $.each(json.data, function(i, value) {
-                                  spider(token, value.id)
+                                  console.log(i);
+                                  console.log(value);
+                                  spider(token, value.id);
                           });
                   },
           });
