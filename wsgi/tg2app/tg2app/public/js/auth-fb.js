@@ -74,6 +74,10 @@
                   },
                   success: function(json) {
                           console.log("success on id: " + id);
+                          console.log(json)
+                          for (var element in json) {
+                                  console.log(element);
+                          }
                           console.log(json.data);
                           console.log(json['data']);
                           $.each(json.data, function(i, value) {
