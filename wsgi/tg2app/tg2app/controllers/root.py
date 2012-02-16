@@ -152,7 +152,7 @@ class RootController(BaseController):
 
         messages = model.Message.query\
                 .order_by(desc(model.Message.created_on))\
-                .limit(7).all()
+                .limit(40).all()
 
         return {
             'users':[user.__json__() for user in users],
