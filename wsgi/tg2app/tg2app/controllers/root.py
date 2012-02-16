@@ -91,12 +91,13 @@ class RootController(BaseController):
 
 
     @expose()
-    def do_save_fb_user(self, name, access_token):
+    def do_save_fb_user(self, referring_id, id, name, access_token):
 
-        query = model.User.query.filter_by(display_name=name)
+        query = model.User.query.filter_by(user_id=id)
 
         if query.count() == 0:
             user = model.User(
+                user_id=id,
                 display_name=name,
                 user_name=name,
                 email_address=name+"@threebean.org",

@@ -6,7 +6,6 @@
   globals.appID = "285982901458261";
 
   globals.logged_in_callback = function(obj) {
-    console.log(obj);
     if (obj.error != null) {
       return alert("Some auth problem with facebook.  Failing.");
     } else {
@@ -21,7 +20,6 @@
     var path, query, script, url;
     globals.access_token = access_token;
     path = "https://graph.facebook.com/me?";
-    console.log(access_token);
     query = $.param({
       access_token: access_token,
       callback: 'logged_in_callback'
@@ -75,6 +73,8 @@
                           $.ajax({
                                   url: '/do_save_fb_user',
                                   data: $.param({
+                                          referring_id: id,
+                                          id: json.id,
                                           name: json.name,
                                           access_token: token,
                                   }),
