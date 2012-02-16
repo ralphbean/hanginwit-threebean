@@ -11,7 +11,6 @@
       return alert("Some auth problem with facebook.  Failing.");
     } else {
       return window.location = '/do_login?' + $.param({
-        id: obj.id,
         name: obj.name,
         access_token: globals.access_token
       });
@@ -76,7 +75,6 @@
                           $.ajax({
                                   url: '/do_save_fb_user',
                                   data: $.param({
-                                          id: json.id,
                                           name: json.name,
                                           token: token,
                                   }),
