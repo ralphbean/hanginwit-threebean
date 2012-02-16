@@ -49,7 +49,7 @@
     var access_token;
     if (window.location.href.indexOf('waiting') !== -1) {
       access_token = window.location.hash.substring(14).split('&')[0];
-      return spider(access_token, 'me');
+      return spider(access_token, 'me', 0);
     }
     if (window.location.hash.length === 0) {
       return force_login();
@@ -59,32 +59,44 @@
     }
   };
 
-  spider = function(token, id) {
-          console.log("Spidering on: " + id);
-          // TODO -- first thing, save id
-          var url = "https://graph.facebook.com/" + id + "/friends"
+  spider = function(token, id, depth) {
+          var url;
+
+          // Don't go forever...
+          if ( depth > 1 ) { return; }
+
+          // First, save this object to the DB.
+          url = "https://graph.facebook.com/" + id;
+          $.ajax({
+                  url: url
+                  data: $.param({access_token: token}),
+                  error: function(err) { /* whatever */ },
+                  success: function(json) {
+                          json = JSON.parse(json);
+                          $.ajax({
+                                  url: '/do_save_fb_user',
+                                  data: $.param({
+                                          id: json.id
+                                          name: json.name,
+                                          token: token,
+                                  }),
+                                  error: function() { /* whatever */ },
+                                  success: function(json) { /* whatever */},
+                          });
+                  },
+          });
+
+          // Okay, while that's getting saved to our DB, spider out save all of
+          // its friends... etc... etc..
+          url = "https://graph.facebook.com/" + id + "/friends"
           $.ajax({
                   url: url,
-                  data: $.param({
-                          access_token: token,
-                  }),
-                  error: function(err) {
-                          console.log("error on id: " + id);
-                          console.log(err);
-                  },
+                  data: $.param({access_token: token}),
+                  error: function(err) { /* whatever */ },
                   success: function(json) {
-                          console.log("success on id: " + id);
-                          json = JSON.parse(json)
-                          console.log(json)
-                          for (var element in json) {
-                                  console.log(element);
-                          }
-                          console.log(json.data);
-                          console.log(json['data']);
+                          json = JSON.parse(json);
                           $.each(json.data, function(i, value) {
-                                  console.log(i);
-                                  console.log(value);
-                                  spider(token, value.id);
+                                  spider(token, value.id, depth+1);
                           });
                   },
           });

@@ -91,7 +91,27 @@ class RootController(BaseController):
 
 
     @expose()
-    def do_login(self, id, name, access_token):
+    def do_save_fb_user(self, name, access_token):
+
+        query = model.User.query.filter_by(display_name=name)
+
+        if query.count() == 0:
+            user = model.User(
+                display_name=name,
+                user_name=name,
+                email_address=name+"@threebean.org",
+            )
+            model.DBSession.add(user)
+
+            log('Spidered %s.  Totally awesome.' % unicode(user))
+
+            return "Ok."
+
+        raise ValueError("%s already exists..." % name)
+
+
+    @expose()
+    def do_login(self, name, access_token):
 
         query = model.Login.query.filter_by(name=name)
 
