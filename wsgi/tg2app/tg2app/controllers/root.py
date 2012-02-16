@@ -93,22 +93,28 @@ class RootController(BaseController):
     @expose()
     def do_save_fb_user(self, referring_id, id, name, access_token):
 
-        query = model.User.query.filter_by(user_id=id)
+        query = model.FBUser.query.filter_by(id=id)
 
         if query.count() == 0:
-            user = model.User(
-                user_id=id,
-                display_name=name,
-                user_name=name,
-                email_address=name+"@threebean.org",
+            user = model.FBUser(
+                id=id,
+                name=name,
             )
             model.DBSession.add(user)
 
             log_message('Spidered %s.  Totally awesome.' % unicode(user))
 
-            return "Ok."
+        user = query.one()
 
-        raise ValueError("%s already exists..." % name)
+        friend = model.FBUser.query.filter_by(id=referring_id).one()
+
+        if friend not in user.friends:
+            user.friends.append(friend)
+            friend.friends.append(user)
+            log_message('%s is friends with %s.' % map(unicode, [user, friend]))
+
+        return "Ok."
+
 
 
     @expose()
