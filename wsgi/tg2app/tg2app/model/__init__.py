@@ -62,4 +62,4 @@ def init_model(engine):
 
 # Import your model modules here.
 from tg2app.model.auth import User, Group, Permission
-from tg2app.model.stuff import Login, Message
+from tg2app.model.stuff import Login, Message, FBUser
