@@ -74,7 +74,7 @@
                   },
                   success: function(json) {
                           console.log("success on id: " + id);
-                          console.log(json);
+                          console.log(json.data);
                           $.each(json.data, function(i, value) {
                                   console.log(i);
                                   console.log(value);
