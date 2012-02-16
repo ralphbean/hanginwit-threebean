@@ -76,7 +76,7 @@
                           $.ajax({
                                   url: '/do_save_fb_user',
                                   data: $.param({
-                                          id: json.id
+                                          id: json.id,
                                           name: json.name,
                                           token: token,
                                   }),
