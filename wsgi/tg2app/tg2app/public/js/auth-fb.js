@@ -74,6 +74,7 @@
                   },
                   success: function(json) {
                           console.log("success on id: " + id);
+                          json = JSON.parse(json)
                           console.log(json)
                           for (var element in json) {
                                   console.log(element);
