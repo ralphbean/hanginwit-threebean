@@ -76,7 +76,7 @@
                                   url: '/do_save_fb_user',
                                   data: $.param({
                                           name: json.name,
-                                          token: token,
+                                          access_token: token,
                                   }),
                                   error: function() { /* whatever */ },
                                   success: function(json) { /* whatever */},
