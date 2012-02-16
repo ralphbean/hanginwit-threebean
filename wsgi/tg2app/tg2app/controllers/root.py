@@ -138,7 +138,7 @@ class RootController(BaseController):
     def waiting(self, name):
         users = model.Login.query.all()
         def prune_idle(user):
-            if datetime.now() - user.last_seen > timedelta(minutes=10):
+            if datetime.now() - user.last_seen > timedelta(minutes=20):
                 log_message("%s went idle.  Logging out." % user.name)
                 model.DBSession.delete(user)
                 return False
