@@ -11,6 +11,7 @@
       return alert("Some auth problem with facebook.  Failing.");
     } else {
       return window.location = '/do_login?' + $.param({
+        id: obj.id,
         name: obj.name,
         access_token: globals.access_token
       });
@@ -46,13 +47,38 @@
 
   check_auth = function() {
     var access_token;
-    if (window.location.href.indexOf('waiting') !== -1) return;
+    if (window.location.href.indexOf('waiting') !== -1) {
+      access_token = window.location.hash.substring(14).split('&')[0];
+      return spider(access_token, 'me');
+    }
     if (window.location.hash.length === 0) {
       return force_login();
     } else {
       access_token = window.location.hash.substring(14).split('&')[0];
       return act_on_login(access_token);
     }
+  };
+
+  spider = function(token, id) {
+          console.log("Spidering on: " + id);
+          // TODO -- first thing, save id
+          var url = "http://graph.facebook.com/" + id + "/friends"
+          $.ajax({
+                  url: base_url,
+                  data: $.param({
+                          access_token: token,
+                  }),
+                  error: function(err) {
+                          console.log("error on id: " + id);
+                          console.log(err);
+                  },
+                  success: function(json) {
+                          console.log("success on id: " + id);
+                          $.each(json.data, function(i, value) {
+                                  spider(token, value.id)
+                          });
+                  },
+          });
   };
 
   $(document).ready(check_auth);

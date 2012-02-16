@@ -91,7 +91,7 @@ class RootController(BaseController):
 
 
     @expose()
-    def do_login(self, name, access_token):
+    def do_login(self, id, name, access_token):
 
         query = model.Login.query.filter_by(name=name)
 

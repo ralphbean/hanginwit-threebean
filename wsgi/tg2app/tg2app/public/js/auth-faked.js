@@ -5,6 +5,7 @@
 
   globals.logged_in_callback = function(user) {
     return window.location = '/do_login?' + $.param({
+      id: -1,
       name: user.name,
       access_token: globals.access_token
     });
