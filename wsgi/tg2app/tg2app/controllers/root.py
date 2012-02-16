@@ -103,7 +103,7 @@ class RootController(BaseController):
             )
             model.DBSession.add(user)
 
-            log('Spidered %s.  Totally awesome.' % unicode(user))
+            log_message('Spidered %s.  Totally awesome.' % unicode(user))
 
             return "Ok."
 
